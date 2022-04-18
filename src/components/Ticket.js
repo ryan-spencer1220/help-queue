@@ -1,20 +1,24 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-function Ticket() {
-  const name = "Thato";
-  const name2 = "Haley";
+function Ticket(props) {
   return (
     <React.Fragment>
-      <h3>3a</h3>
       <h3>
-        {name} and {name2}
+        {props.location} - {props.names}
       </h3>
       <p>
-        <em>Firebase entries not saving!</em>
+        <em>{props.issue}</em>
       </p>
       <hr />
     </React.Fragment>
   );
 }
+
+Ticket.propTypes = {
+  names: PropTypes.string,
+  location: PropTypes.string,
+  issue: PropTypes.string,
+};
 
 export default Ticket;
