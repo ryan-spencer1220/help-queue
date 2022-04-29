@@ -11,6 +11,9 @@ function Ticket(props) {
         </h3>
         <p>
           <em>{props.issue}</em>
+          <p>
+            <em>{props.formattedWaitTime}</em>
+          </p>
         </p>
         <hr />
       </div>
@@ -22,8 +25,9 @@ Ticket.propTypes = {
   names: PropTypes.string,
   location: PropTypes.string,
   issue: PropTypes.string,
-  id: PropTypes.string, // new PropType
-  whenTicketClicked: PropTypes.func, // new PropType
+  id: PropTypes.string,
+  whenTicketClicked: PropTypes.func,
+  formattedWaitTime: PropTypes.string,
 };
 
 export default Ticket;
