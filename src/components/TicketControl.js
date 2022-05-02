@@ -6,6 +6,7 @@ import EditTicketForm from "./EditTicketForm";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import * as a from "./../actions";
+import { withFirestore } from "react-redux-firebase";
 
 class TicketControl extends React.Component {
   constructor(props) {
@@ -38,8 +39,17 @@ class TicketControl extends React.Component {
   };
 
   handleChangingSelectedTicket = (id) => {
-    const selectedTicket = this.props.mainTicketList[id];
-    this.setState({ selectedTicket: selectedTicket });
+    this.props.firestore
+      .get({ collection: "tickets", doc: id })
+      .then((ticket) => {
+        const firestoreTicket = {
+          names: ticket.get("names"),
+          location: ticket.get("location"),
+          issue: ticket.get("issue"),
+          id: ticket.id,
+        };
+        this.setState({ selectedTicket: firestoreTicket });
+      });
   };
 
   handleClick = () => {
@@ -60,10 +70,7 @@ class TicketControl extends React.Component {
     this.setState({ editing: true });
   };
 
-  handleEditingTicketInList = (ticketToEdit) => {
-    const { dispatch } = this.props;
-    const action = a.addTicket(ticketToEdit);
-    dispatch(action);
+  handleEditingTicketInList = () => {
     this.setState({
       editing: false,
       selectedTicket: null,
@@ -71,18 +78,14 @@ class TicketControl extends React.Component {
   };
 
   handleDeletingTicket = (id) => {
-    const { dispatch } = this.props;
-    const action = a.deleteTicket(id);
-    dispatch(action);
+    this.props.firestore.delete({ collection: "tickets", doc: id });
     this.setState({ selectedTicket: null });
   };
 
-  handleAddingNewTicketToList = (newTicket) => {
+  handleAddingNewTicketToList = () => {
     const { dispatch } = this.props;
-    const action = a.addTicket(newTicket);
+    const action = a.toggleForm();
     dispatch(action);
-    const action2 = a.toggleForm();
-    dispatch(action2);
   };
 
   render() {
@@ -149,4 +152,4 @@ const mapStateToProps = (state) => {
 
 TicketControl = connect(mapStateToProps)(TicketControl);
 
-export default TicketControl;
+export default withFirestore(TicketControl);
